@@ -1,54 +1,19 @@
-terraform {
-  required_providers {
-    # Provider source is used for Terraform discovery and installation of
-    # providers. Declare source for all providers required by the module.
-    myprovider = {
-      source  = "namespace/myprovider"
-      version = "~>1.1.0"
-    }
-  }
+# Create repository: "cts-issue-labels"
+resource "github_repository" "cts-issue-labels" {
+  name        = "cts-issue-labels"
+  description = "CTS automated repository to manage labels"
+
+  visibility  = "public"
+  has_issues = true
 }
 
-#
-# Declare resource blocks to describe module behaviors for the infrastructure.
-#
-# The example block below describes creating an address group for each Consul
-# service and applies an existing policy to the group.
-#
-resource "myprovider_address_group" "consul_service" {
-  for_each = local.consul_services
+# Create new label with service-instance id as label-name. Service address +
+# port as label-description
+resource "github_issue_label" "cts-issue-labels" {
+  repository = "cts-issue-labels"
+  color = "CA2171"
 
-  name     = "${var.address_group_prefix}${each.key}"
-  tags     = var.address_group_tags
-  policies = [each.value.cts_user_defined_meta["policy_name"]]
-}
-
-#
-# You can utilize the locals block to transform the var.services variable
-# into a data structure for your module. For more examples of common data
-# transformations visit the project wiki.
-#
-# The example below converts var.services to a map of service names to a list
-# of service instances.
-locals {
-  # Create a map of service names to instance IDs to then build
-  # a map of service names to instances
-  consul_service_ids = transpose({
-    for id, s in var.services : id => [s.name]
-  })
-
-  # Group service instances by service name
-  # consul_services = {
-  #   "app" = [
-  #     {
-  #       "id" = "app-id-01"
-  #       "name" = "app"
-  #       "node_address" = "192.168.10.10"
-  #     }
-  #   ]
-  # }
-  consul_services = {
-    for name, ids in local.consul_service_ids :
-    name => [for id in ids : var.services[id]]
-  }
+  for_each = var.services
+  name = each.value.id
+  description = "${each.value.address}:${each.value.port}"
 }
