@@ -32,6 +32,8 @@ A GitHub personal access token is required in order to use this module:
 
 **User Config for Consul Terraform Sync**
 
+See ['Securely Configure Terraform Providers'](https://www.consul.io/docs/nia/configuration#securely-configure-terraform-providers) for alternatives to inserting token here
+
 example.hcl
 ```hcl
 task {
@@ -42,17 +44,7 @@ task {
   services       = ["api"]
 }
 
-driver "terraform" {
-  required_providers = {
-    myprovider = {
-      source  = "namespace/myprovider"
-      version = "1.1.2"
-    }
-  }
-}
-
 terraform_provider "github" {
   token = "<GIT PERSONAL ACCESS TOKEN>"
-  // See ['Securely Configure Terraform Providers'](https://www.consul.io/docs/nia/configuration#securely-configure-terraform-providers) for alternatives to inserting token here
 }
 ```
