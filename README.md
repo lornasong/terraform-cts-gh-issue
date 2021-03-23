@@ -1,10 +1,10 @@
-# GitHub Issues Module for Consul Terraform Sync
+# GitHub Issue Labels Module for Consul Terraform Sync
 
-This Terraform module creates a repo and GitHub issue labels. Using this module in automation with [Consul Terraform Sync (CTS)](https://www.consul.io/docs/nia) will dynamically create or delete GitHub issue labels based off of configured services. This module is useful for testing CTS with a provider that supports multiple accounts/instances without setting up infrastructure.
+This Terraform module creates a GitHub repo and issue labels. Using this module in automation with [Consul Terraform Sync (CTS)](https://www.consul.io/docs/nia) will dynamically create or delete GitHub issue labels based off of configured services. This module is useful for testing CTS with a provider that supports multiple accounts without setting up infrastructure.
 
 ## Feature
 
-The module uses the `github` Terraform provider to create a repository named 'cts-issues' in the configured GitHub account. It creates GitHub issue labels within this repository with the name of the monitored Consul service instances.
+The module uses the `github` Terraform provider to create a repository named 'cts-labels' in the configured GitHub account. It then creates GitHub Consul-pink issue labels within this repository. The labels are named after the monitored Consul service instances and have the description of the service instance address and port.
 
 ## Requirements
 
@@ -32,13 +32,13 @@ A GitHub personal access token is required in order to use this module:
 
 **User Config for Consul Terraform Sync**
 
-See ['Securely Configure Terraform Providers'](https://www.consul.io/docs/nia/configuration#securely-configure-terraform-providers) for alternatives to inserting token here
+See [Securely Configure Terraform Providers](https://www.consul.io/docs/nia/configuration#securely-configure-terraform-providers) for alternatives to directly inserting token in config file.
 
 example.hcl
 ```hcl
 task {
   name           = "github_issues"
-  source         = "namespace/your-module"
+  source         = "lornasong/gh_labels/cts"
   version        = "0.0.0"
   providers      = ["github"]
   services       = ["api"]
