@@ -37,11 +37,11 @@ See [Securely Configure Terraform Providers](https://www.consul.io/docs/nia/conf
 example.hcl
 ```hcl
 task {
-  name           = "github_issues"
-  source         = "lornasong/gh_labels/cts"
-  version        = "0.0.0"
-  providers      = ["github"]
+  name           = "task_a"
   services       = ["api"]
+  providers      = ["github"]
+  version        = "0.0.1"
+  source         = "lornasong/cts_label/github"
 }
 
 terraform_provider "github" {
